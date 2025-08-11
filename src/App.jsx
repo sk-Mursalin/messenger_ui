@@ -3,6 +3,7 @@ import { Home } from "./components/Home"
 import Login from "./components/Login"
 import { Provider } from "react-redux"
 import { appStore } from "./store/appStore"
+import { Feed } from "./components/Feed"
 
 function App() {
 
@@ -14,6 +15,7 @@ function App() {
           <Routes>
             <Route path="/" element={<Home />}>
               <Route path="/login" element={<Login />} />
+              <Route path="/" element={<Feed />} />
             </Route>
           </Routes>
         </BrowserRouter>

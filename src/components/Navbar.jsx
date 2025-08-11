@@ -19,7 +19,7 @@ export const Navbar = () => {
             <label tabIndex={0} className="btn btn-ghost btn-circle avatar">
               <div className="w-10 rounded-full ring ring-primary ring-offset-base-100 ring-offset-2">
                 <img
-                  src="https://via.placeholder.com/150"
+                  src={user?.data?.photoUrl  }
                   alt="Profile"
                   className="object-cover"
                 />
