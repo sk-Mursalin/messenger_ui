@@ -17,9 +17,8 @@ const ChatList = ({ user }) => {
             <div className="flex-1 border-b border-gray-700 pb-2">
                 <div className="flex justify-between">
                     <h3 className="font-medium">{`${user.firstName} ${user.lastName}`}</h3>
-                    <span className="text-xs text-gray-400">{ }</span>
                 </div>
-                <p className="text-sm text-gray-400 truncate">{ }</p>
+                <p className="text-sm text-gray-400 truncate">click and start realchat</p>
             </div>
         </div>
     )
