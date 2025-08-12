@@ -50,8 +50,8 @@ const Chat = () => {
         });
 
         socket.on("messageReceived", ({ firstName, lastName, text }) => {
-            setMessages((prevState) => [...prevState, { firstName, lastName, text,createdAt:new Date().toISOString() }]);
-            console.log(text);
+            setMessages((prevState) => [...prevState, { firstName, lastName, text, createdAt: new Date().toISOString() }]);
+
         });
 
         return () => {
@@ -84,8 +84,20 @@ const Chat = () => {
             hour: "2-digit",
             minute: "2-digit"
         });
-
         return localTime
+    }
+
+    const date = (mongoDate) => {
+        if (!mongoDate) return "";
+        const createdAt = new Date(mongoDate);
+        const localDate = createdAt.toLocaleDateString("en-IN", {
+            timeZone: "Asia/Kolkata",
+            day: "2-digit",
+            month: "short",
+            year: "numeric"
+        });
+
+        return localDate
     }
 
 
@@ -109,8 +121,8 @@ const Chat = () => {
                             : "mr-auto items-start"
                             }`}
                     >
-                        <div className="text-xs text-gray-400 mb-1">
-                            {`${msg.firstName} ${msg.lastName}`}
+                        <div className="text-xs text-gray-400 mb-1 flex gap-2">
+                            <p>{date(msg.createdAt)}</p> 
                         </div>
                         <div
                             className={`rounded-lg px-4 py-2 break-all text-sm flex ${user.data.firstName === msg.firstName

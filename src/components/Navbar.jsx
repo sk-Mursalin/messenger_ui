@@ -1,8 +1,20 @@
-import { useSelector } from "react-redux"
+import axios from "axios";
+import { useDispatch, useSelector } from "react-redux"
+import { BASE_URL } from "../utils/constant";
+import { useNavigate } from "react-router-dom";
+import { removeUser } from "../store/slices/userSlice";
 
 export const Navbar = () => {
 
   const user = useSelector((state) => state.user);
+  const dispatch = useDispatch()
+  const navigate = useNavigate();
+
+  const handleLogout = async () => {
+    await axios.post(BASE_URL + "/logout", {}, { withCredentials: true });
+    dispatch(removeUser())
+    navigate("/login");
+  }
 
   return (
     <div className="bg-base-300 sticky top-0 z-10 shadow-md">
@@ -19,7 +31,7 @@ export const Navbar = () => {
             <label tabIndex={0} className="btn btn-ghost btn-circle avatar">
               <div className="w-10 rounded-full ring ring-primary ring-offset-base-100 ring-offset-2">
                 <img
-                  src={user?.data?.photoUrl  }
+                  src={user?.data?.photoUrl}
                   alt="Profile"
                   className="object-cover"
                 />
@@ -29,7 +41,7 @@ export const Navbar = () => {
               tabIndex={0}
               className="menu menu-sm dropdown-content mt-3 w-52 p-2 shadow-lg bg-base-100 rounded-box"
             >
-              <li><a href="#">Logout</a></li>
+              <li><a onClick={handleLogout}>Logout</a></li>
             </ul>
           </div>
         </div>}
