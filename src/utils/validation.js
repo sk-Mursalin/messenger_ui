@@ -3,4 +3,5 @@ export const validationConfig = {
     password: [{ require: true, message: "please enter password" }, { minLength: 6, message: "password should at least 6 charecter" }],
     firstName: [{ require: true, message: "please enter firstname" }],
     lastName: [{ require: true, message: "please enter lastname" }],
+    photoUrl: [{ require: true, message: "please paste one photourl" }]
 }

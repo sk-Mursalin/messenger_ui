@@ -10,7 +10,7 @@ import { validationConfig } from "../utils/validation";
 const Login = () => {
   const [signupFormData, setSignupFormData] = useState(() => {
     const storedData = localStorage.getItem("signupFormData");
-    return storedData ? JSON.parse(storedData) : { firstName: "", lastName: "", email: "", password: "" };
+    return storedData ? JSON.parse(storedData) : { firstName: "", lastName: "", email: "", password: "", photoUrl: "" };
   });
   const [loginFormData, setLoginFromData] = useState(() => {
     const storedData = localStorage.getItem("loginFormData");
@@ -99,7 +99,7 @@ const Login = () => {
   }
 
   const signUPHandle = async () => {
-    const { email, password, firstName, lastName } = signupFormData
+    const { email, password, firstName, lastName,photoUrl } = signupFormData
     const data = validation();
     if (Object.keys(data).length > 0) return
 
@@ -110,7 +110,8 @@ const Login = () => {
           email,
           password,
           firstName,
-          lastName
+          lastName,
+          photoUrl
         },
         { withCredentials: true }
       )
@@ -143,6 +144,12 @@ const Login = () => {
             />
             <p className="text-red-600">{signupValidationData.lastName}</p>
 
+          </fieldset>
+          <fieldset className="fieldset">
+            <legend className="fieldset-legend font-normal">PhotoUrl:</legend>
+            <input type="text" name="photoUrl" className="input" placeholder="paste here" value={signupFormData.photoUrl}
+              onChange={(e) => { formHandle(e) }}
+            />
           </fieldset>
         </>}
         <fieldset className="fieldset">

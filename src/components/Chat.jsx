@@ -1,9 +1,10 @@
 import { useEffect, useState, useRef } from "react";
 import { useParams } from "react-router-dom";
 import { createSocketConnection } from "../config/socketConfig";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import axios from "axios";
 import { BASE_URL } from "../utils/constant";
+import { addChats } from "../store/slices/chatSlice";
 
 const Chat = () => {
     const { targetUserId } = useParams();
@@ -11,7 +12,7 @@ const Chat = () => {
     const [newMessage, setNewMessage] = useState("");
     const user = useSelector((store) => store.user);
     const chatUser = useSelector((store) => store.targetChatUser);
-    console.log(chatUser);
+    const dispatch = useDispatch()
     const messagesEndRef = useRef(null);
 
     const fetchChatMessages = async () => {
@@ -20,14 +21,16 @@ const Chat = () => {
         });
 
         const chatMessages = chat?.data?.messages.map((msg) => {
-            const { senderId, text } = msg;
+            const { senderId, text, createdAt } = msg;
             return {
                 firstName: senderId?.firstName,
                 lastName: senderId?.lastName,
                 text,
+                createdAt
             };
         });
         setMessages(chatMessages);
+        dispatch(addChats(chatMessages))
     };
 
     useEffect(() => {
@@ -47,7 +50,7 @@ const Chat = () => {
         });
 
         socket.on("messageReceived", ({ firstName, lastName, text }) => {
-            setMessages((prevState) => [...prevState, { firstName, lastName, text }]);
+            setMessages((prevState) => [...prevState, { firstName, lastName, text,createdAt:new Date().toISOString() }]);
             console.log(text);
         });
 
@@ -71,6 +74,20 @@ const Chat = () => {
     useEffect(() => {
         messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
     }, [messages]);
+
+    const time = (mongoTime) => {
+        if (!mongoTime) return "";
+        const createdAt = new Date(mongoTime);
+        const localTime = createdAt.toLocaleTimeString("en-IN", {
+            timeZone: "Asia/Kolkata",
+            hour12: true,
+            hour: "2-digit",
+            minute: "2-digit"
+        });
+
+        return localTime
+    }
+
 
     return (
         <div className="w-full max-w-3xl mx-auto border border-gray-700 rounded-lg shadow-md mt-6 h-[70vh] flex flex-col bg-gray-900 text-white">
@@ -96,19 +113,20 @@ const Chat = () => {
                             {`${msg.firstName} ${msg.lastName}`}
                         </div>
                         <div
-                            className={`rounded-lg px-4 py-2 break-all text-sm ${user.data.firstName === msg.firstName
+                            className={`rounded-lg px-4 py-2 break-all text-sm flex ${user.data.firstName === msg.firstName
                                 ? "bg-blue-600 text-white"
                                 : "bg-gray-700 text-white"
                                 }`}
                         >
-                            {msg.text}
+                            {msg.text} {<div className="mt-2 text-xs ml-3">{time(msg.createdAt)}</div>}
+
                         </div>
                     </div>
                 ))}
                 <div ref={messagesEndRef} />
             </div>
 
-            <form className="p-4 border-t border-gray-700 bg-gray-800 flex items-center gap-3" onSubmit={(e)=>{
+            <form className="p-4 border-t border-gray-700 bg-gray-800 flex items-center gap-3" onSubmit={(e) => {
                 e.preventDefault()
             }}>
                 <input
