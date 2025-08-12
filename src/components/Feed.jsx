@@ -20,9 +20,8 @@ export const Feed = () => {
     if (!feedData) return
 
     return (
-        <div className="w-full max-w-sm bg-black text-white h-[575px] overflow-y-auto">
+        <div className="w-full max-w-sm bg-gray-800 text-white h-[575px] overflow-y-auto mx-auto">
             {feedData.data.map((user) => <ChatList key={user._id} user={user} />)}
-
         </div>
 
 
