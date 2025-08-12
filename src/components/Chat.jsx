@@ -10,7 +10,9 @@ const Chat = () => {
     const [messages, setMessages] = useState([]);
     const [newMessage, setNewMessage] = useState("");
     const user = useSelector((store) => store.user);
-    const messagesEndRef = useRef(null); 
+    const chatUser = useSelector((store) => store.targetChatUser);
+    console.log(chatUser);
+    const messagesEndRef = useRef(null);
 
     const fetchChatMessages = async () => {
         const chat = await axios.get(BASE_URL + "/chat/" + targetUserId, {
@@ -72,29 +74,32 @@ const Chat = () => {
 
     return (
         <div className="w-full max-w-3xl mx-auto border border-gray-700 rounded-lg shadow-md mt-6 h-[70vh] flex flex-col bg-gray-900 text-white">
-            <div className="p-4 border-b border-gray-700 text-lg font-semibold bg-gray-800">
-                Chat
+            <div className="p-4 border-b border-gray-700 text-lg font-semibold bg-gray-800 flex items-center gap-3">
+                <img
+                    src={chatUser && chatUser.photoUrl}
+                    alt="chatUser"
+                    className="w-10 h-10 rounded-full object-cover"
+                />
+                <span className="text-white">{chatUser && `${chatUser.firstName} ${chatUser.lastName}`}</span>
             </div>
 
             <div className="flex-1 overflow-y-auto p-4 space-y-4">
                 {messages.map((msg, index) => (
                     <div
                         key={index}
-                        className={`flex flex-col screen350:max-w-[60%] screen400:max-w-[70%] ${
-                            user.data.firstName === msg.firstName
-                                ? "ml-auto items-end"
-                                : "mr-auto items-start"
-                        }`}
+                        className={`flex flex-col screen350:max-w-[60%] screen400:max-w-[70%] ${user.data.firstName === msg.firstName
+                            ? "ml-auto items-end"
+                            : "mr-auto items-start"
+                            }`}
                     >
                         <div className="text-xs text-gray-400 mb-1">
                             {`${msg.firstName} ${msg.lastName}`}
                         </div>
                         <div
-                            className={`rounded-lg px-4 py-2 break-all text-sm ${
-                                user.data.firstName === msg.firstName
-                                    ? "bg-blue-600 text-white"
-                                    : "bg-gray-700 text-white"
-                            }`}
+                            className={`rounded-lg px-4 py-2 break-all text-sm ${user.data.firstName === msg.firstName
+                                ? "bg-blue-600 text-white"
+                                : "bg-gray-700 text-white"
+                                }`}
                         >
                             {msg.text}
                         </div>
@@ -103,7 +108,9 @@ const Chat = () => {
                 <div ref={messagesEndRef} />
             </div>
 
-            <div className="p-4 border-t border-gray-700 bg-gray-800 flex items-center gap-3">
+            <form className="p-4 border-t border-gray-700 bg-gray-800 flex items-center gap-3" onSubmit={(e)=>{
+                e.preventDefault()
+            }}>
                 <input
                     value={newMessage}
                     onChange={(e) => setNewMessage(e.target.value)}
@@ -116,7 +123,8 @@ const Chat = () => {
                 >
                     Send
                 </button>
-            </div>
+            </form>
+
         </div>
     );
 };
