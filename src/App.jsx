@@ -12,7 +12,7 @@ function App() {
   return (
     <>
       <Provider store={appStore}>
-        <BrowserRouter basename="/">
+        <BrowserRouter basename="/messenger">
           <Routes>
             <Route path="/" element={<Home />}>
               <Route path="/login" element={<Login />} />
