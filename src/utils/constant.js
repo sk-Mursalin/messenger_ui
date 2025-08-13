@@ -1,1 +1,5 @@
-export const BASE_URL = "http://localhost:7000";
+const isLocalhost = window.location.hostname === "localhost";
+
+export const BASE_URL = isLocalhost
+  ? "http://localhost:7000"
+  : "/messenger";
